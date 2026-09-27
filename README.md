@@ -86,7 +86,7 @@ All cortical columns are **100% identical physical hardware clones (IP-cores)**.
 ---
 
 ### 4. Mathematical Invariance of the Timescale Attractor (Figure 3)
-![Topology Universality](assetes/topology_universality_4runs_fifo.png)
+![Topology Universality](assets/topology_universality_4runs_fifo.png)
 To confirm that this structure is not an artifact of random seeds or spatial indices, we subjected the architecture to four adversarial configurations:
 1. **Condition 1:** Baseline corpus & baseline hardware seed.
 2. **Condition 2:** Completely different corpus stream (Seed 100).
@@ -98,7 +98,7 @@ To confirm that this structure is not an artifact of random seeds or spatial ind
 ---
 
 ### 5. Scalability Beyond Task Count: Emergent Standby (N=4, N=5)
-![Column Scalability & Standby](assetes/column_scalability_3_4_5.png)
+![Column Scalability & Standby](assets/column_scalability_3_4_5.png)
 A critical challenge in modular computing is proving that the system was not artificially tuned to the number of tasks. When provided with surplus columns ($N=4$ and $N=5$) on the 3-task stream:
 * **1-4 Network:** Columns C2, C3, and C4 specialize. **Surplus Column C1 rests in 0.0% Standby (Plasticity: OFF)** across all tasks.
 * **1-5 Network:** Columns C2, C5, and C4 specialize. **Surplus Columns C1 and C3 rest in 0.0% Standby (Plasticity: OFF)** across all tasks.
