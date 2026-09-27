@@ -70,14 +70,14 @@ In a lifelong sequential benchmark across 3 computationally distinct grammars, a
 ---
 
 ### 2. Microsecond Dynamic Bifurcation & Lifelong Stability
-![[training_dynamics_ABC_s42.png|Macro & Micro Dynamics]]
+![Macro & Micro Dynamics](assets/training_dynamics_ABC_s42.png)
 * **Top (Macro):** Over 1,000,000 continuous stream steps, each specialized column maintains $100.0\%$ absolute stability without a single false-positive spike or chattering event.
 * **Bottom (Micro):** The bifurcation transition occurs in **fewer than 20 steps (< 1 microsecond on FPGA)**. When the statistical environment shifts, incumbent columns abdicate gracefully, and the specialized newcomer captures complete dominance.
 
 ---
 
 ### 3. Mechanistic Interpretability: Topology Disentanglement
-![Intra-Column Topology](topology_checkpoint_v14_ABC_s42.png)
+![Intra-Column Topology](assets/topology_checkpoint_v14_ABC_s42.png)
 All cortical columns are **100% identical physical hardware clones (IP-cores)**. Under hyper-local credit metabolism, each column self-wires into three distinct functional processors:
 * **Task A (Dyck-2):** A distributed, recursive attractor across all temporal banks to track bracket stack depth.
 * **Task B (Mirror):** A direct highway linking $\tau=8.0$ (L2) directly to $\tau=4.0$ (L1) with an asymmetric synaptic weight of $0.82$.
@@ -86,7 +86,7 @@ All cortical columns are **100% identical physical hardware clones (IP-cores)**.
 ---
 
 ### 4. Mathematical Invariance of the Timescale Attractor (Figure 3)
-![Topology Universality](topology_universality_4runs_fifo.png)
+![Topology Universality](assetes/topology_universality_4runs_fifo.png)
 To confirm that this structure is not an artifact of random seeds or spatial indices, we subjected the architecture to four adversarial configurations:
 1. **Condition 1:** Baseline corpus & baseline hardware seed.
 2. **Condition 2:** Completely different corpus stream (Seed 100).
@@ -98,7 +98,7 @@ To confirm that this structure is not an artifact of random seeds or spatial ind
 ---
 
 ### 5. Scalability Beyond Task Count: Emergent Standby (N=4, N=5)
-![[holon_v14.0_github/column_scalability_3_4_5.png|Column Scalability & Standby]]
+![Column Scalability & Standby](assetes/column_scalability_3_4_5.png)
 A critical challenge in modular computing is proving that the system was not artificially tuned to the number of tasks. When provided with surplus columns ($N=4$ and $N=5$) on the 3-task stream:
 * **1-4 Network:** Columns C2, C3, and C4 specialize. **Surplus Column C1 rests in 0.0% Standby (Plasticity: OFF)** across all tasks.
 * **1-5 Network:** Columns C2, C5, and C4 specialize. **Surplus Columns C1 and C3 rest in 0.0% Standby (Plasticity: OFF)** across all tasks.
@@ -107,9 +107,9 @@ A critical challenge in modular computing is proving that the system was not art
 ---
 
 ### 6. Neural Darwinism: The Transient Contest of Surplus Columns
-![[holon_v14.0_github/assets/training_dynamics_ABC_s42_col4.png|Surplus Dynamics]]
+![Surplus Dynamics](assets/training_dynamics_ABC_s42_col4.png)
 *(Above: 4-Column dynamics. Below: 5-Column dynamics showing transient competition).*
-![[holon_v14.0_github/assets/training_dynamics_ABC_s42_col5.png|Surplus Dynamics 5-Col]]
+![Surplus Dynamics 5-Col](assets/training_dynamics_ABC_s42_col5.png)
 
 A microscopic view of the task transitions reveals an emergent phenomenon akin to **Gerald Edelman's Neural Darwinism (Neuronal Group Selection)**:
 * When a new task arrives, **all currently uncommitted (standby) columns immediately surge simultaneously**, engaging in a fierce, multi-column contest for several steps.
