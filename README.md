@@ -10,7 +10,7 @@
 
 ---
 
-![[/assets/holon_v14_learning_dynamics.gif|Holon Mechanistic Self-Organization]]
+![[./assets/holon_v14_learning_dynamics.gif|Holon Mechanistic Self-Organization]]
 
 ---
 
