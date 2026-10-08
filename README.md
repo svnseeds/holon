@@ -133,18 +133,18 @@ $$
 \Delta W_{\text{col\_win}} = \eta_{\text{rise}} \cdot (E_{\text{baseline}} - E_{1\text{st}}), \quad (E_{1\text{st}} < E_{\text{baseline}} = 1.000)
 ```
 
-$$
+```math
 \Delta W_{\text{col\_loser}} = \eta_{\text{drop}} \cdot (E_{1\text{st}} - E_k)
-$$
+```
 
 * **M-of-N Persistence Filter (Hardware LUT6 Match):**  
   To prevent transient delimiter tokens (e.g., spaces `' '`) from triggering accidental module takeovers, column victories pass through a sliding 6-bit shift register ($N=6, M=4$). A credit increase unlocks only when a column secures at least 4 wins in the last 6 steps (directly implementable on a single FPGA LUT6).
 * **Power-4 Contrastive Routing & Standby Dormancy:**  
   Column readouts are weighted contrastively:
   
-$$
+```math
 w_{\text{ratio\_k}} = \frac{(W_{\text{col\_k}})^4}{\sum_{m=1}^N (W_{\text{col\_m}})^4 + \epsilon}
-$$
+```
 
   A winning column captures over **99.9%** of the channel, while dormant modules remain clamped at the standby floor ($W_{\text{col}} = 0.10$) with internal plasticity gated off.
 
@@ -160,9 +160,9 @@ $$
 * **Hyper-Local Delta Rule:**  
   Readout synapses update strictly using locally available pre-synaptic activations and post-synaptic prediction errors:
 
-$$
+```math
 \Delta W_{\text{out_k}} = w_{\text{ratio\_k}} \cdot \eta_{\text{delta}} \cdot (e_{\text{local}} \cdot h^T)
-$$
+```
 
 * **Somatic Homeostasis:**  
   Each node autonomously modulates its internal somatic gain to maintain a target mean absolute activity ($H_{\text{target}} = 0.55$).
