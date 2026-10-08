@@ -135,7 +135,7 @@ $$
   Column readouts are weighted contrastively:
   
 $$
-w\\_{\text{ratio\\_k}} = \frac{(W\\_{\text{col\\_k}})^4}{\sum\\_{m=1}^N (W\\_{\text{col\\_m}})^4 + \epsilon}
+w\\_{\text{ratio\\_k}} = \frac\{(W\\_{\text{col\\_k}})^4}{\sum\\_{m=1}^N (W\\_{\text{col\\_m}})^4 + \epsilon}
 $$
   
   A winning column captures **99.98%** of the channel, while defeated or surplus modules rest at the standby floor ($W_{\text{col}} = 0.10$) with internal plasticity completely frozen.
