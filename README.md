@@ -161,7 +161,7 @@ w_{\text{ratio\_k}} = \frac{(W_{\text{col\_k}})^4}{\sum_{m=1}^N (W_{\text{col\_m
   Readout synapses update strictly using locally available pre-synaptic activations and post-synaptic prediction errors:
 
 ```math
-\Delta W_{\text{out_k}} = w_{\text{ratio\_k}} \cdot \eta_{\text{delta}} \cdot (e_{\text{local}} \cdot h^T)
+\Delta W_{\text{out\_k}} = w_{\text{ratio\_k}} \cdot \eta_{\text{delta}} \cdot (e_{\text{local}} \cdot h^T)
 ```
 
 * **Somatic Homeostasis:**  
