@@ -118,7 +118,7 @@ Holon operates across three nested physical tiers, entirely executed under `@tor
   Raw byte vectors are mapped onto a 256-dimensional unit sphere via a deterministic orthogonal QR matrix:
 
 $$
-u\\_{in0}(t) = W\\_{\text{sensor}} \cdot \left( \frac{X(t)}{\sqrt{\frac{1}{D}\sum\\_{i=1}^D X\\_i(t)^2 + \epsilon}} \right), \quad W\\_{\text{sensor}}^T W\\_{\text{sensor}} = I
+u_{in0}(t) = W_{\text{sensor}} \cdot \left( \frac{X(t)}{\sqrt{\frac{1}{D}\sum_{i=1}^D X_i(t)^2 + \epsilon}} \right), \quad W_{\text{sensor}}^T W_{\text{sensor}} = I
 $$
 
   This mapping preserves energy ($RMS \equiv 1.000$) and eliminates dynamic range arithmetic overflow in fixed-point logic.
