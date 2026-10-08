@@ -117,17 +117,17 @@ Holon operates across three nested physical tiers, entirely executed under `@tor
 * **Dejima Gateway (Deterministic Isometric ROM):**  
   Raw byte vectors are mapped onto a 256-dimensional unit sphere via a deterministic orthogonal QR matrix:
 
-$$
+```math
 u_{in0}(t) = W_{\text{sensor}} \cdot \left( \frac{X(t)}{\sqrt{\frac{1}{D}\sum_{i=1}^D X_i(t)^2 + \epsilon}} \right), \quad W_{\text{sensor}}^T W_{\text{sensor}} = I
-$$
+```
 
   This mapping preserves energy ($RMS \equiv 1.000$) and eliminates dynamic range arithmetic overflow in fixed-point logic.
 * **Extrinsic-Climb Winner-Take-All (WTA):**  
   To prevent inactive columns from gaining credit due to collective baseline error, credit updates require external environmental correlation:
 
-$$
+```math
 E_k(t) = \frac{\|u_{in0}(t) - TD_k(t-1)\|}{\sqrt{D}}, \quad k \in \{1, \dots, N\}
-$$
+```
 
 ```math
 \Delta W_{\text{col\_win}} = \eta_{\text{rise}} \cdot (E_{\text{baseline}} - E_{1\text{st}}), \quad (E_{1\text{st}} < E_{\text{baseline}} = 1.000)
