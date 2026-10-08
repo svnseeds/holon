@@ -130,7 +130,7 @@ E_k(t) = \frac{\|u_{in0}(t) - TD_k(t-1)\|}{\sqrt{D}}, \quad k \in \{1, \dots, N\
 $$
 
 ```math
-\Delta W_{\text{col\sb{win}}} = \eta_{\text{rise}} \cdot (E_{\text{baseline}} - E_{1\text{st}}), \quad (E_{1\text{st}} < E_{\text{baseline}} = 1.000)
+\Delta W_{\text{col_win}} = \eta_{\text{rise}} \cdot (E_{\text{baseline}} - E_{1\text{st}}), \quad (E_{1\text{st}} < E_{\text{baseline}} = 1.000)
 ```
 
 $$
