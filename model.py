@@ -1,6 +1,8 @@
 # model.py
 # Holon v14.0 Core Neural Architecture
 # 1-N Multi-Column Cortical Network under Pure Local Dynamics
+# holon_v14.0.2
+
 import math
 import os
 import torch
@@ -165,6 +167,16 @@ class ParallelReservoirBank:
         mask = (plasticity_gates > self.cfg.PLASTICITY_THRESHOLD).float()
         grad = torch.matmul(err_feedback.unsqueeze(3), h_state.unsqueeze(2))
         effective_eta = self.eta * plasticity_gates * mask
+
+        # =====================================================================
+        # Gated Synaptic Turnover (Oja-style metabolic decay)
+        # Actively prunes spurious correlation noise on winning columns,
+        # while strictly FREEZING decay on dormant columns (Zero decay when mask == 0).
+        # =====================================================================
+        effective_leak = self.cfg.W_OUT_LEAK * plasticity_gates * mask
+        self.w_out.mul_(1.0 - effective_leak)
+
+        # Standard hyper-local correlation update
         self.w_out.add_(effective_eta * grad)
 
         # Enforce maximum row norm boundary
@@ -393,6 +405,10 @@ class HolonMultiColumnNetwork:
 
         self.prev_td_cols = torch.zeros(self.num_super, d, dtype=dt, device=dev)
         self.prev_b_top = torch.zeros(d, dtype=dt, device=dev)
+
+        # Hardware 6-bit shift register per column (Stores 0/1 win history of last N steps)
+        self.win_history = torch.zeros(self.num_super, config.WINDOW_N, dtype=config.DTYPE, device=dev)
+
         self.step_count = 0
 
     @torch.no_grad()
@@ -401,7 +417,11 @@ class HolonMultiColumnNetwork:
         inv_sqrt_d = self.cfg.INV_SQRT_D
         u_in0 = self.sensor.encode(x_curr)
 
-        # Top-2 Competitive Lateral Inhibition
+        # =====================================================================
+        # Top-2 Competitive Lateral Inhibition with Persistence Gating
+        # Eradicates accidental lateral takeover on delimiter tokens (' ')
+        # by requiring sustained consecutive wins before unlocking W_col rise.
+        # =====================================================================
         if self.step_count > 0:
             err_cols = u_in0.unsqueeze(0) - self.prev_td_cols
             norm_errs = torch.norm(err_cols, dim=1) * inv_sqrt_d
@@ -410,10 +430,22 @@ class HolonMultiColumnNetwork:
             e_1st, _ = top_vals[0], top_vals[1]
             win_idx = top_indices[0]
 
+            # M-of-N Sliding Window Shift Register (Hardware LUT6 Popcount)
+            # Shifts in 1 for winner and 0 for losers into 6-bit history buffer
+            curr_win = torch.zeros(self.num_super, 1, dtype=self.cfg.DTYPE, device=self.cfg.DEVICE)
+            curr_win[win_idx, 0] = 1.0
+            self.win_history = torch.cat([self.win_history[:, 1:], curr_win], dim=1)
+            win_counts = torch.sum(self.win_history, dim=1)  # 1-bit adder / LUT6 popcount
+
             # Update credit only if winner correlates with extrinsic environment
             if e_1st < self.cfg.E_BASELINE:
                 credit_rel = e_1st - norm_errs
-                credit_rel[win_idx] = self.cfg.E_BASELINE - e_1st
+
+                # Only unlock credit ascent if column achieved >= M wins in last N steps
+                if win_counts[win_idx] >= self.cfg.WINDOW_M:
+                    credit_rel[win_idx] = self.cfg.E_BASELINE - e_1st
+                else:
+                    credit_rel[win_idx] = 0.0  # Mute accidental delimiter spikes (' ')
 
                 eta_vec = torch.full_like(self.w_col, self.cfg.ETA_COL_DROP)
                 eta_vec[win_idx] = self.cfg.ETA_COL_RISE
@@ -502,4 +534,5 @@ class HolonMultiColumnNetwork:
         self.array.reset_state()
         self.prev_td_cols.zero_()
         self.prev_b_top.zero_()
+        self.win_history.zero_()
         self.step_count = 0

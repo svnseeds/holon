@@ -1,6 +1,7 @@
 # train_continual.py
 # Holon v14.0 Continual Lifelong Learning Runner
 # Autonomous Column Specialization & Real-Time Dynamics Visualization
+# holon_v14.0.2
 import argparse
 import time
 import os

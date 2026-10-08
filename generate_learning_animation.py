@@ -2,6 +2,7 @@
 # Holon v14.0 Real-Time Mechanistic Self-Organization Animation Generator
 # Renders synchronized multi-panel GIF: Accuracy trajectory, error dissipation,
 # circuit wiring formation, and emergent block-diagonal synaptic matrix.
+# holon_v14.0.2
 import os
 import io
 import matplotlib
@@ -111,14 +112,14 @@ def draw_heatmap_frame(ax, w_td1, tau_l1, tau_l2):
 def main():
     cfg = Config(seed=42)
     holon = HolonMultiColumnNetwork(cfg)
-    corpus_path = cfg.TASKS['C']['train_corpus']
+    corpus_path = cfg.TASKS['B']['train_corpus']
 
     if not os.path.exists(corpus_path):
         print(f"[!] Corpus not found: {corpus_path}. Run generate_data.py first.")
         return
 
     loader = ByteStreamLoader(corpus_path, cfg)
-    bayes_limit = cfg.TASKS['C']['bayes_limit']
+    bayes_limit = cfg.TASKS['B']['bayes_limit']
 
     tau_l0 = 1.0 / cfg.LEAK_L0
     tau_l1 = [1.0 / l for l in cfg.LEAKS_L1]
@@ -137,7 +138,7 @@ def main():
 
     print(f"\n==========================================================================")
     print(f"  Holon v14.0 Real-Time Learning Dynamics Animation Generator")
-    print(f"  Task: V2L2-FIFO | Epochs: {TOTAL_EPOCHS} | Target: Bayes Limit {bayes_limit:.2f}%")
+    print(f"  Task: V2L2-mirror | Epochs: {TOTAL_EPOCHS} | Target: Bayes Limit {bayes_limit:.2f}%")
     print(f"==========================================================================\n")
     print(f"[*] 1. Executing training and logging frame snapshots ...")
 
@@ -210,7 +211,7 @@ def main():
         curr_acc_val = history['acc'][f_idx]
         is_bayes = curr_acc_val >= bayes_limit
         acc_title_color = '#d62728' if is_bayes else '#111111'
-        bayes_tag = " [★BAYES SURPASSED!]" if is_bayes else ""
+        bayes_tag = " [BAYES OPTIMAL REACHED]" if is_bayes else ""
         ax_acc.set_title(f"Accuracy Trajectory: {curr_acc_val:.2f}%{bayes_tag}",
                          fontsize=11, fontweight='bold', color=acc_title_color)
         ax_acc.legend(loc='lower right', frameon=True, fontsize=8.5)
@@ -234,7 +235,7 @@ def main():
         draw_heatmap_frame(ax_heat, history['w_td1'][f_idx], tau_l1, tau_l2)
 
         curr_ep = history['epochs'][f_idx]
-        plt.suptitle(f"Holon v14.0 Mechanistic Self-Organization | Task: V2L2-FIFO (Epoch: {curr_ep:.1f}/{TOTAL_EPOCHS})",
+        plt.suptitle(f"Holon v14.0 Mechanistic Self-Organization | Task: V2L2-mirror (Epoch: {curr_ep:.1f}/{TOTAL_EPOCHS})",
                      fontsize=13, fontweight='bold', y=0.98)
 
         buf = io.BytesIO()

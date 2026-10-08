@@ -1,15 +1,14 @@
 # generate_data.py
 # One-Stop Benchmark Corpora Generator for Tasks A, B, and C
-# Generates balanced Train (1500 patterns) and Test (300 patterns) datasets.
+# Supports custom random seed configuration via CLI arguments.
+# holon_v14.0.2
+import argparse
 import random as rd
 from config import Config
 
+DEFAULT_SEED = 42
 NUM_PATTERNS_TRAIN = 1500
-NUM_PATTERNS_TEST = 300
-
-SEED_TASK_A = 42
-SEED_TASK_B = 100
-SEED_TASK_C = 200
+NUM_PATTERNS_TEST = 1500
 
 # =========================================================================
 # Task A: Pure V2D2 Dyck-2 (Monte Carlo Rejection Sampling)
@@ -50,10 +49,10 @@ def build_dyck_corpus(filename, num_patterns, target_depth, pairs):
             if reached_depth == target_depth and len(pattern) > 0:
                 f.write(pattern + " ")
                 accepted_count += 1
-    print(f"  [+] Generated {filename:<24} ({num_patterns} patterns | depth: {target_depth})")
+    print(f"  [+] Generated {filename:<28} ({num_patterns} patterns | depth: {target_depth})")
 
 # =========================================================================
-# Task B: V2L2-Mirror (Time-Reversal LIFO Buffer)
+# Task B: V2L2-Mirror (Time-Reversal LIFO Buffer on ['a', 'b'])
 # =========================================================================
 def build_mirror_corpus(filename, num_patterns, length, char_set, trigger):
     with open(filename, "w", encoding="utf-8") as f:
@@ -61,10 +60,10 @@ def build_mirror_corpus(filename, num_patterns, length, char_set, trigger):
             seq = [rd.choice(char_set) for _ in range(length)]
             pattern = "".join(seq) + trigger + "".join(reversed(seq)) + " "
             f.write(pattern)
-    print(f"  [+] Generated {filename:<24} ({num_patterns} patterns | length: {length})")
+    print(f"  [+] Generated {filename:<28} ({num_patterns} patterns | length: {length})")
 
 # =========================================================================
-# Task C: V2L2-FIFO (Phase-Delay Queue)
+# Task C: V2L2-FIFO (Phase-Delay Queue on ['c', 'd'])
 # =========================================================================
 def build_fifo_corpus(filename, num_patterns, length, char_set, trigger):
     with open(filename, "w", encoding="utf-8") as f:
@@ -72,43 +71,59 @@ def build_fifo_corpus(filename, num_patterns, length, char_set, trigger):
             seq = [rd.choice(char_set) for _ in range(length)]
             pattern = "".join(seq) + trigger + "".join(seq) + " "
             f.write(pattern)
-    print(f"  [+] Generated {filename:<24} ({num_patterns} patterns | length: {length})")
+    print(f"  [+] Generated {filename:<28} ({num_patterns} patterns | length: {length})")
+
+def resolve_filename(base_filename, seed, default_seed):
+    """Append _s{seed} suffix only when an alternative non-default seed is specified."""
+    if seed == default_seed:
+        return base_filename
+    parts = base_filename.rsplit('.', 1)
+    return f"{parts[0]}_s{seed}.{parts[1]}" if len(parts) == 2 else f"{base_filename}_s{seed}"
 
 def main():
-    cfg = Config()
+    parser = argparse.ArgumentParser(description="Holon Benchmark Corpora Generator")
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED, help=f"Deterministic seed (default: {DEFAULT_SEED})")
+    parser.add_argument("--train-patterns", type=int, default=NUM_PATTERNS_TRAIN, help="Number of training patterns")
+    parser.add_argument("--test-patterns", type=int, default=NUM_PATTERNS_TEST, help="Number of test patterns")
+    args = parser.parse_args()
+
+    cfg = Config(seed=args.seed)
     print("\n==========================================================================")
-    print("  Holon v14.0 Benchmark Corpora Generator (1-Stop Balanced Synthesis)")
-    print(f"  Train: {NUM_PATTERNS_TRAIN} patterns | Test: {NUM_PATTERNS_TEST} patterns")
+    print(f"  Holon v14.0.2 Benchmark Corpora Generator (Target Seed: {args.seed})")
+    print(f"  Train: {args.train_patterns} patterns | Test: {args.test_patterns} patterns")
     print("==========================================================================\n")
 
     # 1. Task A: Pure Dyck-2
-    print("[*] Generating Task A (Pure V2D2 Dyck-2) Corpora ...")
-    rd.seed(SEED_TASK_A)
+    print(f"[*] Generating Task A ({cfg.TASKS['A']['name']}) Corpora ...")
+    rd.seed(args.seed)
     pairs = [("(", ")"), ("[", "]")]
-    build_dyck_corpus(cfg.TASKS['A']['train_corpus'], NUM_PATTERNS_TRAIN, target_depth=2, pairs=pairs)
-    build_dyck_corpus(cfg.TASKS['A']['test_corpus'], NUM_PATTERNS_TEST, target_depth=2, pairs=pairs)
+    train_a = resolve_filename(cfg.TASKS['A']['train_corpus'], args.seed, DEFAULT_SEED)
+    test_a = resolve_filename(cfg.TASKS['A']['test_corpus'], args.seed, DEFAULT_SEED)
+    build_dyck_corpus(train_a, args.train_patterns, target_depth=2, pairs=pairs)
+    build_dyck_corpus(test_a, args.test_patterns, target_depth=2, pairs=pairs)
 
     # 2. Task B: V2L2-Mirror
-    print("\n[*] Generating Task B (V2L2-Mirror) Corpora ...")
-    rd.seed(SEED_TASK_B)
-    char_set = ["a", "b"]
+    print(f"\n[*] Generating Task B ({cfg.TASKS['B']['name']}) Corpora ...")
+    rd.seed(args.seed)
+    char_set_b = ["a", "b"]
     trigger_mirror = chr(cfg.TRIGGER_MIRROR)
-    build_mirror_corpus(cfg.TASKS['B']['train_corpus'], NUM_PATTERNS_TRAIN, length=2,
-                        char_set=char_set, trigger=trigger_mirror)
-    build_mirror_corpus(cfg.TASKS['B']['test_corpus'], NUM_PATTERNS_TEST, length=2,
-                        char_set=char_set, trigger=trigger_mirror)
+    train_b = resolve_filename(cfg.TASKS['B']['train_corpus'], args.seed, DEFAULT_SEED)
+    test_b = resolve_filename(cfg.TASKS['B']['test_corpus'], args.seed, DEFAULT_SEED)
+    build_mirror_corpus(train_b, args.train_patterns, length=2, char_set=char_set_b, trigger=trigger_mirror)
+    build_mirror_corpus(test_b, args.test_patterns, length=2, char_set=char_set_b, trigger=trigger_mirror)
 
     # 3. Task C: V2L2-FIFO
-    print("\n[*] Generating Task C (V2L2-FIFO) Corpora ...")
-    rd.seed(SEED_TASK_C)
+    print(f"\n[*] Generating Task C ({cfg.TASKS['C']['name']}) Corpora ...")
+    rd.seed(args.seed)
+    char_set_c = ["c", "d"]
     trigger_fifo = chr(cfg.TRIGGER_FIFO)
-    build_fifo_corpus(cfg.TASKS['C']['train_corpus'], NUM_PATTERNS_TRAIN, length=2,
-                      char_set=char_set, trigger=trigger_fifo)
-    build_fifo_corpus(cfg.TASKS['C']['test_corpus'], NUM_PATTERNS_TEST, length=2,
-                      char_set=char_set, trigger=trigger_fifo)
+    train_c = resolve_filename(cfg.TASKS['C']['train_corpus'], args.seed, DEFAULT_SEED)
+    test_c = resolve_filename(cfg.TASKS['C']['test_corpus'], args.seed, DEFAULT_SEED)
+    build_fifo_corpus(train_c, args.train_patterns, length=2, char_set=char_set_c, trigger=trigger_fifo)
+    build_fifo_corpus(test_c, args.test_patterns, length=2, char_set=char_set_c, trigger=trigger_fifo)
 
     print("\n==========================================================================")
-    print(" [*] All 6 corpora generated successfully.")
+    print(" [*] Benchmark corpora generated successfully.")
     print("==========================================================================\n")
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@
 # Holon v14.0 Column Scalability & Emergent Standby Visualizer (1-3, 1-4, 1-5 Networks)
 # Evaluates multi-column models on unseen test streams to demonstrate autonomous specialization
 # without task handcrafting: surplus circuits remain strictly gated in low-power standby at 0.0%.
+# holon_v14.0.2
 import os
 import matplotlib
 matplotlib.use('Agg')  # Headless server compatible

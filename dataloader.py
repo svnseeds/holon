@@ -1,5 +1,6 @@
 # dataloader.py
 # Zero-Overhead Hardware-Native Byte Stream Loader
+# holon_v14.0.2
 import torch
 
 class ByteStreamLoader:

@@ -1,6 +1,7 @@
 # config.py
 # Holon v14.0 Canonical Configuration & Hyperparameters
 # Hardware-Native 1-N Modular Cortical Network
+# holon_v14.0.2
 import math
 import os
 import random
@@ -75,6 +76,11 @@ class Config:
         self.ETA_DELTA = 0.001
         self.W_OUT_NORM_MAX = 3.0
         self.W_OUT_INIT_STD = 0.005
+        # Somatic Synaptic Turnover / Leaky Readout Decay (Oja-style Regularization)
+        # Prevents memorization overfitting during prolonged stream exposure without manual early stopping.
+        # Hardware shift equivalent: ~ 2^(-16) (Maps to >> 16 bit-shift subtraction)
+        self.W_OUT_LEAK = 1e-5
+        
 
         # 10. Intra-Column Credit Dynamics (W_td)
         self.ETA_TD = 0.05
@@ -91,6 +97,11 @@ class Config:
         self.W_COL_MAX = 1.00
         self.W_COL_POWER = 4.0            # Fourth-power contrastive WTA exponent
         self.PLASTICITY_THRESHOLD = 5e-4  # Instant plasticity gating threshold
+        # Sliding Window Persistence Gating (M-of-N Window)
+        # Window length N=6 (Hardware 6-bit shift register, maps to 1x LUT6 on FPGA)
+        # Minimum win threshold M=4 (4 wins out of last 6 steps = 66.7% majority)
+        self.WINDOW_N = 6
+        self.WINDOW_M = 4
 
         # 12. Somatic Homeostasis
         self.H_ACT_TARGET = 0.55
@@ -105,6 +116,8 @@ class Config:
         self.CHAR_SQUARE_CLOSE = ord(']')
         self.CHAR_A = ord('a')
         self.CHAR_B = ord('b')
+        self.CHAR_C = ord('c')           
+        self.CHAR_D = ord('d')           
         self.TRIGGER_MIRROR = ord('@')
         self.TRIGGER_FIFO = ord('>')
         self.CHAR_SPACE = ord(' ')
@@ -117,7 +130,7 @@ class Config:
                 'test_corpus': 'test_v2d2.txt',
                 'bayes_limit': 70.00,
                 'eval_margin': 2.0,
-                'epochs': 15,
+                'epochs': 40,
             },
             'B': {
                 'name': 'V2L2-Mirror',
@@ -133,7 +146,7 @@ class Config:
                 'test_corpus': 'test_v2l2_fifo.txt',
                 'bayes_limit': 83.33,
                 'eval_margin': 1.5,
-                'epochs': 50,
+                'epochs': 40,
             }
         }
 
@@ -144,7 +157,7 @@ class Config:
 
         # 16. Two-Tier Dynamics Visualization Standards
         self.MACRO_SAMPLE_INTERVAL = 50   # Sampling decimation for macro lifetime plot
-        self.MICRO_ZOOM_STEPS = 40        # Step resolution for microscopic bifurcation zoom
+        self.MICRO_ZOOM_STEPS = 50        # Step resolution for microscopic bifurcation zoom
         self.PLOT_DPI = 300
 
     def set_seed(self, seed):

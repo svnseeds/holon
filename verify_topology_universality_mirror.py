@@ -2,6 +2,7 @@
 # Mechanistic Proof: Invariance of Timescale Attractor Topology (V2L2-Mirror Task)
 # Evaluates 4 adversarial configurations: Baseline, Corpus Invariance,
 # Substrate Seed Invariance, and Silicon Slot Permutation Invariance.
+# holon_v14.0.2
 import os
 import matplotlib
 matplotlib.use('Agg')

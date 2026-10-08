@@ -1,6 +1,7 @@
 # plot_column_topology.py
 # Holon v14.0 Mechanistic Interpretability: Intra-Column Neural Topology Visualizer
 # Renders 1-4-4 directed neural wiring diagrams and top-down synaptic matrices (W_td1).
+# holon_v14.0.2
 import argparse
 import os
 import matplotlib

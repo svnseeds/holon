@@ -2,6 +2,7 @@
 # Mechanistic Proof: Invariance of Timescale Attractor Topology (V2L2-FIFO Task)
 # Evaluates 4 adversarial configurations: Baseline, Corpus Invariance,
 # Substrate Seed Invariance, and Silicon Slot Permutation Invariance.
+# holon_v14.0.2
 import os
 import matplotlib
 matplotlib.use('Agg')
@@ -27,7 +28,7 @@ TAU_COLORS = {
 }
 
 @torch.no_grad()
-def train_single_task_fifo(cfg, corpus_path, epochs=50):
+def train_single_task_fifo(cfg, corpus_path, epochs=40):
     """Train single V2L2-FIFO task and extract winner synaptic matrices."""
     holon = HolonMultiColumnNetwork(cfg)
     loader = ByteStreamLoader(corpus_path, cfg)
@@ -138,7 +139,7 @@ def draw_sorted_heatmap(ax, w_td1, tau_l1, tau_l2, is_permuted=False):
 def main():
     print(f"\n==========================================================================")
     print(f"  Holon v14.0 Topology Universality & Permutation Invariance Benchmark")
-    print(f"  Task: V2L2-FIFO (Single Task / 50 Epochs each)")
+    print(f"  Task: V2L2-FIFO (Single Task / 40 Epochs each)")
     print(f"==========================================================================")
 
     c_base = "train_v2l2_fifo.txt"
@@ -191,7 +192,7 @@ def main():
         tau_l1 = [1.0 / l for l in cfg.LEAKS_L1]
         tau_l2 = [1.0 / l for l in cfg.LEAKS_L2]
 
-        win_col, w0, w1 = train_single_task_fifo(cfg, run['corpus'], epochs=50)
+        win_col, w0, w1 = train_single_task_fifo(cfg, run['corpus'], epochs=40)
         print(f"    -> Done! Winner: Column {win_col+1} | Peak Bypass Weight: {w1.max():.2f}")
 
         results.append({
