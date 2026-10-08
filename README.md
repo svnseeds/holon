@@ -108,7 +108,9 @@ Holon operates under three nested physical tiers, entirely executed under `@torc
 ### 1. Macro Tier: Encapsulated Modules & Common Arbitration Bus
 * **Dejima Gateway (Deterministic Isometric ROM):**  
   Raw byte vectors are mapped onto a 256-dimensional unit sphere via a deterministic orthogonal QR matrix:
+  ```math
   $$u_{in0}(t) = W_{\text{sensor}} \cdot \left( \frac{X(t)}{\sqrt{\frac{1}{D}\sum_{i=1}^D X_i(t)^2 + \epsilon}} \right), \quad W_{\text{sensor}}^T W_{\text{sensor}} = I$$
+  ```
   This preserves energy ($RMS \equiv 1.000$) and eliminates dynamic range arithmetic overflow in fixed-point logic.
 * **Extrinsic-Climb Winner-Take-All (WTA):**  
   To prevent inactive columns from rising due to collective failure, credit updates require actual extrinsic environmental improvement:
