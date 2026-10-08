@@ -134,7 +134,7 @@ $$
 ```
 
 $$
-\Delta W_{\text{col_loser}} = \eta_{\text{drop}} \cdot (E_{1\text{st}} - E_k)
+\Delta W_{\text{col\_loser}} = \eta_{\text{drop}} \cdot (E_{1\text{st}} - E_k)
 $$
 
 * **M-of-N Persistence Filter (Hardware LUT6 Match):**  
@@ -143,7 +143,7 @@ $$
   Column readouts are weighted contrastively:
   
 $$
-w_{\text{ratio_k}} = \frac{(W_{\text{col_k}})^4}{\sum_{m=1}^N (W_{\text{col_m}})^4 + \epsilon}
+w_{\text{ratio\_k}} = \frac{(W_{\text{col\_k}})^4}{\sum_{m=1}^N (W_{\text{col\_m}})^4 + \epsilon}
 $$
 
   A winning column captures over **99.9%** of the channel, while dormant modules remain clamped at the standby floor ($W_{\text{col}} = 0.10$) with internal plasticity gated off.
@@ -161,7 +161,7 @@ $$
   Readout synapses update strictly using locally available pre-synaptic activations and post-synaptic prediction errors:
 
 $$
-\Delta W_{\text{out_k}} = w_{\text{ratio_k}} \cdot \eta_{\text{delta}} \cdot (e_{\text{local}} \cdot h^T)
+\Delta W_{\text{out_k}} = w_{\text{ratio\_k}} \cdot \eta_{\text{delta}} \cdot (e_{\text{local}} \cdot h^T)
 $$
 
 * **Somatic Homeostasis:**  
