@@ -130,11 +130,11 @@ E\\_k(t) = \frac{\|u\\_{in0}(t) - TD\\_k(t-1)\|}{\sqrt{D}}, \quad k \in \{1, \do
 $$
 
 $$
-\Delta W\\_{\text{col\_win}} = \eta\\_{\text{rise}} \cdot (E\\_{\text{baseline}} - E\\_{1\text{st}}), \quad (E\\_{1\text{st}} < E\\_{\text{baseline}} = 1.000)
+\Delta W\\_{\text{col\\_win}} = \eta\\_{\text{rise}} \cdot (E\\_{\text{baseline}} - E\\_{1\text{st}}), \quad (E\\_{1\text{st}} < E\\_{\text{baseline}} = 1.000)
 $$
 
 $$
-\Delta W\\_{\text{col\_loser}} = \eta\\_{\text{drop}} \cdot (E\\_{1\text{st}} - E\\_k)
+\Delta W\\_{\text{col\\_loser}} = \eta\\_{\text{drop}} \cdot (E\\_{1\text{st}} - E\\_k)
 $$
 
 * **M-of-N Persistence Filter (Hardware LUT6 Match):**  
@@ -143,7 +143,7 @@ $$
   Column readouts are weighted contrastively:
   
 $$
-w\\_{\text{ratio\_k}} = \frac{(W\\_{\text{col\_k}})^4}{\sum\\_{m=1}^N (W\\_{\text{col\_m}})^4 + \epsilon}
+w\\_{\text{ratio\\_k}} = \frac{(W\\_{\text{col\\_k}})^4}{\sum\\_{m=1}^N (W\\_{\text{col\_m}})^4 + \epsilon}
 $$
 
   A winning column captures over **99.9%** of the channel, while dormant modules remain clamped at the standby floor ($W_{\text{col}} = 0.10$) with internal plasticity gated off.
@@ -161,7 +161,7 @@ $$
   Readout synapses update strictly using locally available pre-synaptic activations and post-synaptic prediction errors:
 
 $$
-\Delta W\\_{\text{out\_k}} = w\\_{\text{ratio\_k}} \cdot \eta\\_{\text{delta}} \cdot (e\\_{\text{local}} \cdot h^T)
+\Delta W\\_{\text{out\\_k}} = w\\_{\text{ratio\\_k}} \cdot \eta\\_{\text{delta}} \cdot (e\\_{\text{local}} \cdot h^T)
 $$
 
 * **Somatic Homeostasis:**  
